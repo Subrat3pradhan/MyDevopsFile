@@ -32,6 +32,44 @@ Best process for ansible installation(RHEL10, AmazonLinux 2023)
 yum install python -y
 yum install python-pip -y
 pip install ansible
+pip install --upgrade pip
+ansible --version
+
+With Password
+==============
+Lunch 2 EC2 instace for ansible node purpose,and server configure below on bothe node use muli-exe
+1-useradd ansadmin
+  passwd ansadmin // set password
+2-visudo //sudo privilage to user
+     ansadmin ALL=(ALL) NOPASSWD: ALL
+3-vi /etc/ssh/sshd_config //ssh permision
+     PasswordAuthentication yes
+   ->service sshd restart
+
+Without pssword
+================
+Only Server Node
+
+su - ansadmin
+   -->ssh-keygen ->enter -> enter-> enter->
+   -->ls .ssh // check public key file
+
+login ansible server with su - ansadmin
+1- ssh-copy-id ansadmin@172.31.15.247(private ip of node EC2)
+    --> put password of user for last time)
+2- same for 2nd node
+3- now check ssh with private ip
+4-for creating hosts file, bcz ansible install 2nd process withous cofigfile
+   -->sudo mkdir /etc/ansible
+   -->cd /etc/ansible/
+   -->sudo vi hosts            //hosts file should be inside /etc/ansible/
+
+            172.31.15.247 //private ip of node-1
+            172.31.15.248 //private ip of node-2
+            :wq!
+5-got to /etc/ansible/ this directory check below cmd
+  -->ansible all -m ping // check ip reachable or not
+
 
 
 
