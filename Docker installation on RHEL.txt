@@ -1,0 +1,40 @@
+Docker installation RHEL Linux 9.5
+================================================================
+->sudo yum update
+->sudo vi /etc/yum.repos.d/docker.repo
+
+[docker-ce-stable]
+name=Docker CE Stable - $basearch
+baseurl=https://download.docker.com/linux/rhel/9/$basearch/stable
+enabled=1
+gpgcheck=1
+gpgkey=https://download.docker.com/linux/rhel/gpg
+
+->Save the file and exit the text editor
+->sudo yum install docker-ce --nobest
+->sudo systemctl start docker
+->sudo systemctl enable docker
+->docker --version
+->sudo docker run hello-world
+
+Now check "docker images" if helo world showing than ok now docker ready
+
+Dockerfile
+==========
+FROM ubuntu
+WORKDIR /tmp
+RUN echo "Hi subrat" > /tmp/rajfile
+ENV myname subrat
+COPY myfile /tmp  -----------------# create myfile on base machine#
+ADD mydir.tar.gz /etc  ------------# create mydir directory and convert it mydir.tar.gz# otherwise showing error
+RUN apt update -y
+RUN apt install git -y
+RUN apt install tree -y
+ (or)
+FROM ubuntu
+RUN echo "Hi subrat" > /tmp/rajfile
+
+Dockerfile for volume creation
+--------------------------------
+FROM ubuntu
+VOLUME ["/subratdir"]

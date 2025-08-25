@@ -1,0 +1,58 @@
+task/main.yml script
+*****************************************
+---
+# tasks file for setup-apache-role
+- name: httpd package install
+  yum:
+    name: httpd
+    state: present
+  when: ansible_os_family == "RedHat"
+  notify: httpd service start
+
+- name: apache2 package install
+  apt:
+    name: apache2
+    state: present
+  when: ansible_os_family == "Debian"
+  notify: apache2 service start
+
+- name: copy html file to nodes
+  copy:
+    src: /home/ansadmin/index.html
+    dest: /var/www/html
+    mode: 0666
+
+handler/main.yml script
+*****************************************
+---
+# handlers file for setup-apache-role
+- name: httpd service start
+  service:
+    name: httpd
+    state: started
+  when: ansible_os_family == "RedHat"
+
+- name: apache2 service start
+  service:
+    name: apache2
+    state: started
+  when: ansible_os_family == "Debian"
+
+
+files
+*************
+copy that file to files folder
+
+cp ../index.html files/
+
+Main playbook // lets setup_apache_subrat.yml
+**********************************************
+---
+- name: This playbook install apache with role
+  hosts: all
+  become: yes
+ 
+  roles:
+  - setup-apache-role
+  - setup-apache-role-1 // if more role to run
+  - setup-apache-role-2 // if more role to run

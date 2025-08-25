@@ -1,0 +1,41 @@
+For windows
+===============
+1- download git and install// version 2.47.1 and set name and email
+2- download java version 17 and install 
+3- set Environmental verial for JAVA_HOME and set path
+4- download jenkin .war file
+5- download tomact and install with set UN & PW // version 10
+   now login with localhost:8080
+     -> if you want to change port 8080 than C:\Program Files\Apache Software         Foundation\Tomcat 10.1\conf -- server.xml edit with own port
+     -> after port modify window->serch->service->Tomcat 10-> stop and start
+        than login with localhost:newport
+6- set path for JENKINS_HOME (create a JENKINSHOME folder in C-drive that path set at environmental verial on system veriable)
+7- place jenkins.war file on C:\Program Files\Apache Software Foundation\Tomcat    10.1\webapps
+
+8- Restart laptop // after restart laptop, just stop and start the Tomcat, than jenkins start
+
+9- open http://localhost:8080 --> managerAPP --> check jenkins start or not
+   than click jenkins open now. 
+
+if still not open jenkins, than below steps
+-------------------------------------------
+ 1- open window->serch->service->Tomcat 10 --- stop
+ 2- got to that folder where .war file placed and start cmd on that folder and     run  command "java -jar jenkins.war" for one time start jernkins
+ 1- open window->serch->service->Tomcat 10 --- start
+------------------------------------------------------
+
+10- Open jenkin and unlock the jenkins with password, (that password saved that folder    which we created)
+   (i)- go to select plugins to install --> select none --> install --> Create UN & PW -->
+      save and continue
+11- search & Download zip Ant(version-1.10.15) file.
+    --> Afetr download extract file in c-drive
+    --> set Environment variable for ANT_HOME and set bin directory path
+    --> Now check ant -version and echo %ANT_HOME%
+12- Go to jenkins plugin and install below plugins,
+    -->GitHub
+    -->Ant
+    -->JUnit Realtime test Reporter
+    -->Deploy to container
+    -->Build pipeline
+
+13- Restart Laptop

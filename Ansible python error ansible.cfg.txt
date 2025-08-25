@@ -1,0 +1,6 @@
+
+[defaults]
+
+interpreter_python=auto_silent
+
+command_warnings=False

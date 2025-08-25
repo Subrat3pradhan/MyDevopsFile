@@ -1,0 +1,32 @@
+Check Path
+============
+file $(which java)
+file copy above o/p file
+
+
+Set for RedHat & Amazon 2023
+===============================
+vi .bash_profile
+
+export JAVA_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64"
+
+export M2_HOME="/opt/maven"
+
+export M2="/opt/maven/bin"
+
+export PATH="$PATH:$JAVA_HOME/bin"
+
+export PATH="$PATH:$M2_HOME/bin"
+
+export PATH="$PATH:$M2/bin"
+
+
+for Amazon2 Java and maven
+=============================
+# User specific environment and startup programs
+JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64
+M2_HOME=/opt/maven
+M2=/opt/maven/bin
+PATH=$PATH:$HOME/bin:$JAVA_HOME:$M2:$M2_HOME
+
+export PATH

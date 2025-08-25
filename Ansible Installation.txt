@@ -1,0 +1,53 @@
+		Ansible Installation
+              ==========================
+Old process
+===========
+Launch Amazon Linux (need not to install ansible in nodes)
+wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+yum install epel-release-latest-9.noarch.rpm -y
+sudo yum update -y
+sudo yum install git python python-devel python-pip openssl ansible -y
+ansible --version
+
+for Amazon Linux
+=================
+sudo amazon-linux-extras install epel
+sudo yum update -y
+sudo yum install git python python-devel python-pip openssl ansible -y
+ansible --version
+
+For RedHat Linux 9.5 (Plow)
+=============================
+dnf install ansible-core  //with create host file
+ansible --version
+
+================================
+if linux 9.5 hange during update run below cmd
+
+dnf clean all
+
+
+Best process for ansible installation(RHEL10, AmazonLinux 2023)
+=================================================================
+yum install python -y
+yum install python-pip -y
+pip install ansible
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

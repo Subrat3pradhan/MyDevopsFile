@@ -1,0 +1,325 @@
+Playbook yaml scrip format
+=============================
+ansible-playbook playbookname.yml //playbook push command
+=============================================================
+
+
+for creating user
+===================
+---
+- name: This playbook tocreate user
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: creating user rohit
+    user: name=rohit
+       (or)
+  tasks:
+  - name: creating user rohit
+    user:
+      name: akash
+
+for creating dir
+==================
+---
+- name: This playbook to create directory
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: creating directory
+    file:
+      path: /home/ansadmin/devops_dir
+      state: directory
+
+for crating file
+================
+---
+- name: This playbook to create dir
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: creating file
+    file:
+      path: /home/ansadmin/demofile
+      state: touch
+
+copy file to nodes
+===================
+---
+- name: This Testing playbook
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: copy file to nodes
+    copy:
+      src: /home/ansadmin/index.html
+      dest: /home/ansadmin/
+      owner: ansadmin
+      group: ansadmin
+      mode: 0644
+
+package installed
+=====================
+---
+- name: This Testing playbook
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: package installed on nodes
+    yum:
+      name: git
+      state: latest/installed/present
+
+Install and start service
+==========================
+---
+- name: This Testing playbook
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: httpd package install
+    yum:
+      name: httpd
+      state: present
+  - name: httpd service start
+    service:
+      name: httpd
+      state: started
+
+remove and stop service
+==========================
+---
+- name: This Testing playbook
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: httpd service stop
+    service:
+      name: httpd
+      state: stopped
+  - name: httpd package remove
+    yum:
+      name: httpd
+      state: absent
+  
+Install and start service many package & servicess
+===================================================
+---
+- name: This Testing playbook
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: httpd package install
+    yum:
+      name: httpd
+      state: present
+    notify: httpd service start
+  - name: git package install
+    yum:
+      name: git
+      state: present
+    notify: git service start
+
+  handlers:
+  - name: httpd service start
+    service:
+      name: httpd
+      state: started
+  - name: git service start
+    service:
+      name: git
+      state: started
+
+        (or)
+
+---
+- name: This playbook for multple package install and service start
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: httpd package install
+    yum:
+      name: httpd
+      state: present
+  - name: httpd service start
+    service:
+      name: httpd
+      state: started
+  - name: git package install
+    yum:
+      name: git
+      state: present
+  - name: git service start
+    service:
+      name: git
+      state: started     
+
+
+install package for for different OS nodes for create web server
+=========================================================================
+---
+- name: This playbook for crete webserver to install apache on different OS machine
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: httpd package install
+    yum:
+      name: httpd
+      state: present/latest/installed
+    when: ansible_os_family == "RedHat"
+
+  - name: httpd service start
+    service:
+      name: httpd
+      state: started
+    when: ansible_os_family == "RedHat"
+
+  - name: apache2 package install
+    apt:
+      name: apache2
+      state: present/latest
+    when: ansible_os_family == "Debian"
+
+  - name: apache2 service start
+    service:
+      name: apache2
+      state: started
+    when: ansible_os_family == "Debian"
+
+  - name: copy html file to nodes
+    copy:
+      src: /home/ansadmin/index.html
+      dest: /var/www/html
+      owner: ansadmin
+      group: ansadmin
+      mode: 0666
+
+install multiple packages in one task
+==============================================
+---
+- name: This playbook for multiple packages installation
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Multiple package installed on nodes
+    yum:
+      name: ['git', 'which', 'httpd', 'docker*', 'mysql']
+      state: latest/installed/present
+
+uninstall multiple packages in one task
+==============================================
+---
+- name: This playbook for multiple packages un-installation
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Multiple package remove on nodes
+    yum:
+      name: ['git*', 'which*', 'httpd*', 'docker*', 'mysql*']
+      state: absent
+
+creating user using variable
+================================
+---
+- name: This playbook tocreate user
+  hosts: all
+  become: yes
+  
+  vars:
+    user: subrat
+
+  tasks:
+  - name: creating user {{user}}
+    user:
+      name: "{{user}}"
+
+creating user using variable with file
+==========================================
+create a file
+vi user.yml
+user: deepika
+user1: bunny
+
+vi create_user_var_files.yml //playbook
+
+---
+- name: This playbook tocreate user
+  hosts: all
+  become: yes
+  
+  vars_files:
+  - user.yml
+
+  tasks:
+  - name: creating user {{user}}
+    user:
+      name: "{{user1}}"
+
+
+****************************
+Error Handling
+****************************
+---
+- name: This playbook for crete webserver to install apache on different OS machine
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: httpd package install
+    yum:
+      name: httpd
+      state: present/latest/installed
+    when: ansible_os_family == "RedHat"
+
+  - name: httpd service start
+    service:
+      name: http                         //here package name wrong
+      state: started
+    when: ansible_os_family == "RedHat"
+    ignore_errors: yes                   //Error handling command, just ignore this error 
+
+  - name: apache2 package install
+    apt:
+      name: apache2
+      state: present/latest
+    when: ansible_os_family == "Debian"
+
+  - name: apache2 service start
+    service:
+      name: apache2
+      state: started
+    when: ansible_os_family == "Debian"
+
+  - name: copy html file to nodes
+    copy:
+      src: /home/ansadmin/index.html
+      dest: /var/www/html
+      owner: ansadmin
+      group: ansadmin
+      mode: 0666
+
+
+
+
+
+
+
+
+
+
+
+
+
+
