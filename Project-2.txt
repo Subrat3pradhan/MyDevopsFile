@@ -14,12 +14,15 @@ step-2 (Lunch Jenkins server and install git, java and set EV path for java)
 =================================================================================
 1-Lunch EC2 instance for Jenkis server, with modify SG ssh, http, 8080
   --> install git
-  --> install Java-17*
+  --> install Java-17* // Now java-21
 2-set environmental veriable
   --> vi .bash_profile
         JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64
                   
-        PATH=$PATH:$HOME/bin:$JAVA_HOME:
+        PATH=$PATH:$HOME/bin:$JAVA_HOME
+        
+        export PATH
+
 3-exit from root user and again enter sudo su -
 
 step-3 (jenkins install on jenkins server EC2)
@@ -66,10 +69,29 @@ step-6 (Create a job and build that job to create .war file)
 1-now create a job
    -->Job name: MyFirst-Mavenproject
    -->project type: maven project ---->ok
-   -->select git and past the repo.link
+   -->select SCM --> git and past the repo.link
    --> in goal type "clean install" --->Apply--->save
 2-Build that Job, after success check below path .war file created
    cd /var/lib/jenkins/workspace/MyFirst-MavenPrject/webapp/target
+
+***********************************************************************************************************************************************************
+Note:- sometime when you build the job its fail and node shaowing offline due to/tmp running low space the follow thw instruction
+
+mkdir -p /var/lib/jenkins/tmp
+chown jenkins:jenkins /var/lib/jenkins/tmp
+chmod 755 /var/lib/jenkins/tmp
+
+sudo mkdir -p /etc/systemd/system/jenkins.service.d
+sudo tee /etc/systemd/system/jenkins.service.d/override.conf > /dev/null <<EOF
+[Service]
+Environment="JAVA_OPTS=-Djava.io.tmpdir=/var/lib/jenkins/tmp"
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl restart jenkins
+
+ps -ef | grep jenkins | grep tmpdir    //You should see: -Djava.io.tmpdir=/var/lib/jenkins/tmp
+************************************************************************************************************************************************************
 
 step-7 (Lunch ansible server, instal Ansible, add user, pw, and sudo privilage to user)
 ======================================================================================
@@ -77,7 +99,7 @@ Lunch EC2 instance for ansible server, and instal ansible 2nd process without co
 1- yum install python -y
 2- yum install python-pip
 3- pip install ansible
-4- pip install --upgrade pip
+4- pip install --upgrade pip  // python3 -m pip install --upgrade pip
    -->ansible --version // showing configuration file none
 5---useradd ansadmin
     passwd ansadmin // set password
@@ -108,7 +130,7 @@ login ansible server with su - ansadmin
     --> put password of user for last time)
 2- same for 2nd node
 3- now check ssh with private ip
-4-for creating hosts file, bcz ansible install 2nd process withous cofigfile
+4-for creating hosts file, bcz ansible install 2nd process withous cofigfile in Ansible-server
    -->sudo mkdir /etc/ansible
    -->cd /etc/ansible/
    -->sudo vi hosts            //hosts file should be inside /etc/ansible/
@@ -161,19 +183,21 @@ select 2 node on multi-exection
   --> vi .bash_profile
         JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64
                   
-        PATH=$PATH:$HOME/bin:$JAVA_HOME:
+        PATH=$PATH:$HOME/bin:$JAVA_HOME
+        export PATH
+
   --> exit from root user and again enter sudo su -
 3-go to apache-tomcat website
-   -->wget past the tar.gz link for website (version-11)
-   -->tar -xvzf tar.gz file
-   --> rename that file as tomcat
+ root#-->wget past the tar.gz link for website (version-10 //form binary distribution core)
+ root#-->tar -xvzf tar.gz file
+ root#--> rename that file as tomcat
  if now check its not working http://public-ip:8080, due to not start the service
 4- cd tomcat/bin
-   -->ls, check startup.sh & shutdown.sh
-   -->./startup.sh
+  root#-->ls, check startup.sh & shutdown.sh
+  root#-->./startup.sh
   (Now http://public-ip:8080 check its working, but not acces to manager App(Bcz manager    aap work same machine browser where tomcat install,tomcat install in EC2 and now       browsing from my laptop)
 5- cd conf/
-  -->find / -name context.xml
+  root#-->find / -name context.xml                         //root# means root directory
       /root/tomcat/conf/context.xml
       /root/tomcat/webapps/docs/META-INF/context.xml
       /root/tomcat/webapps/examples/META-INF/context.xml
@@ -234,8 +258,8 @@ step-13 (create playbook for copy from ansible server to nodes tomcat)
 step-14 (create new 3rd job for complete automation process)
 =======================================================================
 1-now create a 3rd job
-   -->Job name: Deploy_on_ansible( 2nd job)
-   -->copy from: MyFirst-Mavenproject--> ok
+   -->Job name: Deploy_on_Container_using_ansible
+   -->copy from: Deploy_on_ansible(2nd job)--> ok
    --> git and goal copy from previous so we dont set
    -->Post-build Actions
       --> select Send build artifacts over SSH
@@ -261,43 +285,3 @@ step-16 (Check after modify and commit, pool SCM run automatically or not)
 =======================================================================================
 1- edit index.jsp file, add and commit and push
 2-Now check at tomcat content changed or not
-
-       
-
-
-
-
-
-
-    
-
-         
-
-
-
-
-
-    
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
