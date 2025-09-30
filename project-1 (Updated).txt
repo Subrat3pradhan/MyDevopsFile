@@ -1,0 +1,253 @@
+                     For windows Jenkins(jenkins.war) Running on Tomacat Server
+=======================================================================================================
+step-1 (Java Download & Installation and Environmental patha set)
+-------------------------------------------------------------------------------------------------------
+1-download git(from git-scm.com//download for windows)// version 2.47.1 
+2-Now install (next-next-..12 times--finish) //
+3-Now check- open cmd -> type -> git --version
+4-Now set name and email--> git config --global user.name "subrat"
+                            git config --global user.email "subrat3.pradhan@gmail.com"
+  Now check- open cmd- type--> git config --list
+               clear screen--> cls
+   
+step-2 (Java Download & Installation and Environmental patha set)
+-------------------------------------------------------------------------------------------------------
+1-download java development kit for windows (x64 installer) // version 17 if not working try for jav-21 or java-11 (Java-21 not support jenkins)
+2-Now install-->next-next-ok-next-close
+3-Now check-->close cmd prompt- again open- type--> java -version 
+3-set Environmental verial for set JAVA_HOME path
+  ->go to C-Drive->program file->java->jdk-17->Copt that path (C:\Program Files\Java\jdk-17)
+  ->go search bar->serch Environmental variable-> open-> 
+    ->click Environmental variable- New uper tab
+      -> Variable name: JAVA_HOME
+      -> Variable valu: past path link (C:\Program Files\Java\jdk-17) -->ok
+    ->click Environmental variable- New lower tab-> New
+      -> Variable name: JAVA_HOME
+      -> Variable valu: past path link (C:\Program Files\Java\jdk-17) -->ok
+    ->click Environmental variable- New lower tab
+      -> Select Path on the list
+      -> Selet New - path the bin directory path link (C:\Program Files\Java\jdk-17) -->ok
+  ->Now check -->cmd--> %JAVA_HOME%
+
+Step-3 (Download jenin.war file which run on Tomcat server)
+-------------------------------------------------------------------------------------------------------
+1-Go to Jenkin site jenkins.io
+2-Go download option for windows
+3-Download Generic java package (.war) // (jenkins.war file)
+
+step-4 (download tomact and install with set UN & PW)
+-------------------------------------------------------------------------------------------------------
+1-go to tomcat.apache.or (serch on google download tomcat)
+2-find 32-bit/64-bit Windows service installer &Download // version 10
+3-Install that tomact.exe file-->next-> i agree-> next-> 
+  set conector port:8080 (if required change it to 8090, 8081 etc),
+  set User Name: admin
+  Password: admin
+  ->next ->next->next->install-> click Run Apache Tomcat (for start tomcat service)-> finish
+4-Now check-> serch on search bat "Monitor Tomcat" -> Open Monitor Tomcat-> 
+  Startup Type: Change Manual to Automatic ->Aplly ->Ok // (for automatic tomcat start after laptop restart)
+
+Setp-5 (Now Login Tomcat, set custom path, change default port number)
+-------------------------------------------------------------------------------------------------------
+1-now login with localhost:8080 - successfully Tomcat login
+2-set path for JENKINS_HOME (create a JENKINSHOME folder in C-drive that path set at environmental verial on   system veriable)
+  -> Variable name: JENKINS_HOME
+  -> Variable valu: C:\JENKINSHOME  ->Apply -->ok
+  ->Now check -> open cmd-> echo  %JENKINS_HOME% -> showing C:\JENKINSHOME
+
+3-                       ***************** RESTART LAPTOP ******************
+
+   (after restart laptop otherwise JENKINSHOME not recognise, 
+    just stop and start the Tomcat,than jenkins start)
+
+Step-6 (Place jenkins.war in C:\Program Files\Apache Software Foundation\Tomcat 10.1\webapps)
+-------------------------------------------------------------------------------------------------------
+7- place jenkins.war file on C:\Program Files\Apache Software Foundation\Tomcat 10.1\webapps
+     -> After placing one jenkins folder will create automatically
+     -> Now check that folder shownig Manager App // now we can login jenkins
+     -> How login jenkins boths are running same machine with port 8080, login below url
+        -> localhost:8080/jenkins
+     -> After login now unlock jenkins with password, which path mention in jenkins
+     -> After login go select plugins to install-->none-> set UN & Password-> save and continue
+
+Step-7 (Download & Install Ant)
+-------------------------------------------------------------------------------------------------------
+1- Search & Download zip Ant(https://ant.apache.org/bindownload.cgi //version-1.10.15)
+   ->for window version (https://dlcdn.apache.org//ant/binaries/apache-ant-1.10.15-bin.zip)
+2- Afetr download extract file in c-drive, and copy that path (C:\apache-ant-1.10.15)
+3- set Environment variable for ANT_HOME and set bin directory path
+    -->go search bar->serch Environmental variable-> open->
+    -->click Environmental variable- New uper tab(User Variable)
+      -> Variable name: ANt_HOME
+      -> Variable valu: past path link (C:\apache-ant-1.10.15) -->ok
+    -->click Environmental variable- New lower tab(System Variable)- New
+      -> Variable name: ANT_HOME
+      -> Variable valu: past path link (C:\apache-ant-1.10.15) -->ok
+    -->click Environmental variable- New lower tab(System Variable)
+      -> Select Path on the list
+      -> Selet New - path the bin directory path link (C:\apache-ant-1.10.15/bin)     
+4- Now check ant -version and echo %ANT_HOME%
+
+Step-8 (Install Required plugins)
+-------------------------------------------------------------------------------------------------------
+1- Go to jenkins -> Manage Jenkins -> plugins
+    -->GitHub
+    -->Ant
+    -->JUnit Realtime test Reporter
+    -->Deploy to container
+    -->Build pipeline
+2-after completed ->Go back to the top page
+
+3- ******** NOW RESTART LAPTOP *********
+
+Step-9 ( Git clone the developers code)
+-------------------------------------------------------------------------------------------------------
+1-open any folder where you want to create repository folder, go that path search bar   type "cmd"-->   now open cmd prompt terminal with that folder directory
+  -> Now clone that repository
+    ->git clone past repository HTTPS link (https://github.com/Subrat3pradhan/SampleWebApp.git)
+  -> Now check that folder created on that directory
+
+Step-10 (Create 1st job for pulling code from GitHub)
+-------------------------------------------------------------------------------------------------------
+1-now create a job
+   -->Job name: Firstjob
+   -->project type: Freestyle project ---->ok
+   --> General --> advance -> select Use custom workspace ->
+      Directory: ${JENKINS_HOME}/workspace/SampleWebApp   
+       //own path create where job file store otherwise it will create anywhere
+   -->select SCM --> git and past the repo.link
+   --->Apply--->save
+
+#######################################################################################################
+Note- If any occure during creating job means not apply follow bellow steps
+-->Open cmd -> on this folder-> C:\Program Files\Apache Software Foundation\Tomcat 10.1\bin>
+-->C:\Program Files\Apache Software Foundation\Tomcat 10.1\bin>service.bat remove
+-->C:\Program Files\Apache Software Foundation\Tomcat 10.1\bin>service.bat install
+-->C:\Program Files\Apache Software Foundation\Tomcat 10.1\bin>sc query Tomcat10
+if showing  STATE              : 1  STOPPED
+            WIN32_EXIT_CODE    : 1077  (0x435)
+-->C:\Program Files\Apache Software Foundation\Tomcat 10.1\bin>sc start Tomcat10
+if not started than go 
+-->in serch bar laptop--> Monitor Tomcat--> start
+Now check issue resolved
+#######################################################################################################
+
+Step-11 (Create 2nd job for Ant building, checking quality of code)
+-------------------------------------------------------------------------------------------------------
+1-now create a job
+   -->Job name: Secondjob
+   -->project type: Freestyle project ---->ok
+   --> General --> advance -> select Use custom workspace ->
+      Directory: ${JENKINS_HOME}/workspace/SampleWebApp   
+       //own path create where job file store otherwise it will create anywhere
+   -->select SCM --> git and past the repo.link
+   -->Build steps -> add build steps -> Invoke Ant -> type checkstyle
+   --->Apply--->save
+
+Step-12 (Create 3rd job for JUnit Testing and get Test-Result)
+-------------------------------------------------------------------------------------------------------
+1-now create a job
+   -->Job name: Thirdjob
+   -->project type: Freestyle project ---->ok
+   --> General --> advance -> select Use custom workspace ->
+      Directory: ${JENKINS_HOME}/workspace/SampleWebApp   
+       //own path create where job file store otherwise it will create anywhere
+   -->select SCM --> git and past the repo.link
+   -->Build steps -> add build steps -> Invoke Ant -> type junit
+   -->Post-build Actions -> select Publish JUnit test result report 
+                         ->Type TestCalculator_JUnitResult.xml (this is default name, dont change it)
+   --->Apply--->save
+
+Step-13 (manager-script and admin access to tomcat due to jekins.war placed in tomcat_
+-------------------------------------------------------------------------------------------------------
+Before create 4th job, first we access the tomcat for script-access and admin access 
+follow the step for backdor entry of tomcat
+
+--> go-to C:\Program Files\Apache Software Foundation\Tomcat 10.1\conf
+--> edit tomcat-users
+--> edit this line <user username="admin" password="admin" roles="manager-gui" />
+ --><user username="admin" password="admin" roles="manager-gui,manager-script,admin" />
+-->save
+#######################################################################################################
+if you want to change port 8080, its not mandotory than
+--> go-to C:\Program Files\Apache Software Foundation\Tomcat-10.1\conf
+  --> edit server.xml edit with own port
+#######################################################################################################
+
+Step-14 (Create 3rd job for deploy plugin, Deploy .war-file on tomcat)
+-------------------------------------------------------------------------------------------------------
+1-now create a job
+   -->Job name: Thirdjob
+   -->project type: Freestyle project ---->ok
+   --> General --> advance -> select Use custom workspace ->
+      Directory: ${JENKINS_HOME}/workspace/SampleWebApp   
+       //own path create where job file store otherwise it will create anywhere
+   -->select SCM --> git and past the repo.link
+   -->Build steps -> add build steps -> Invoke Ant -> type war
+   -->Post-build Actions -> select Deploy war/ear to a container 
+                         -> WAR/EAR files: **/*.war (its mention if check in ?)
+                         -> Context path: samplewebapp (any name)
+   -->Containers --> Add Container --Tomcat 9.x Remote
+                                   ->Credential-->Add
+                                               -->Jenkins
+                                               -->Username admin (which we create)
+                                               -->Password admin (which we create)
+                                               -->Add
+                                               --> chnge it None to admin
+  -->Tomcat URL: http://localhost:8080/ (if u port change than select that port)
+  --->Apply--->save
+
+Step-14 (Now create upstrem link between all job for pipeline)
+-------------------------------------------------------------------------------------------------------
+1-Firstjob-->configure-->Post-build Actions-->select Build other projects
+                                           -->Projects to build : Secondjob (remove , if any)
+                                           -->Trigger only if build is stable (check it enable)
+                                           -->Apply--->save
+2-Secondjob-->configure-->Post-build Actions-->select Build other projects
+                                           -->Projects to build : Thirdjob (remove , if any) 
+                                           -->Trigger only if build is stable (check it enable)
+                                           -->Apply--->save
+3-Thirdjob-->configure-->Post-build Actions-->select Build other projects
+                                           -->Projects to build : Fouthjob (remove , if any) 
+                                           -->Trigger only if build is stable (check it enable)
+                                           -->Apply--->save
+
+***Now if we build 1stjob--it run 2ndjob--it run 3rdjob---it run 4thjob****
+
+Step-14 (Now Create Pipeline view Dashboard using Build pipeline plugin)
+-------------------------------------------------------------------------------------------------------
+New view(+) --> Name: CI-CD pipiline view (Any Name)
+            --> Type: Select Build Pipeline View (after build pipeline plugin it visible
+            --> Create
+            --> check Pipeline Flow -->Layout --> Upstream / downstream config
+                                              -->Select Initial Job: Firstjob
+            -->Apply -->Save
+
+
+Step-14 (Now set poll SCM on Firstjob for Automation)
+-------------------------------------------------------------------------------------------------------
+1-Firstjob-->configure-->Triggers-->Click Poll SCM
+                                           -->Schedule : * * * * * (Star with space)
+                                           -->Apply--->save
+
+Step-15 ( Check Auto poll working or not)
+-------------------------------------------------------------------------------------------------------
+Create folder and clone that Git Repository follw below step
+
+1-go F:\Subrat\Project file ---> type cmd on that path bar
+2-git clone repository HTTP link (https://github.com/Subrat3pradhan/SampleWebApp.git)
+3-Now one folder create SampleWebApp, enter that folder and -- webcontent--index
+     -> chnge anything
+4-F:\Subrat\Project file\SampleWebApp -->git add .
+                                      -->git commit -m "2nd"
+                                      --> git push origin master
+Now wait 1 miniute all jobs are trigered
+And one new folder create Tomcat is SampleWebApp
+Open tha and check what u change.
+
+******************************************* Thanks **************************************************** 
+
+
+
+
+
